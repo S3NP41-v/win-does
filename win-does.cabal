@@ -1,0 +1,71 @@
+cabal-version:      3.0
+name:               win-does
+version:            0.1.0.0
+
+category:           System
+build-type:         Simple
+
+synopsis:           simple mouse and keyboard control for windows
+
+description:        A simple library for taking control over the mouse and keyboard,
+                    using the windows (Win32) API.
+                    This library is meant specifically and only for Windows.
+
+homepage:           https://github.com/S3NP41-v/win-does
+bug-reports:        https://github.com/S3NP41-v/win-does/issues
+
+license:            MIT
+license-file:       LICENSE
+
+author:             S3NP41-v
+maintainer:         s3np41v@gmail.com
+
+extra-doc-files:    CHANGELOG.md
+                  , README.md
+
+common warnings
+    ghc-options: -Wall
+
+
+
+executable keyboard-example
+  import:             warnings
+
+  main-is:            keyboard-example.hs
+
+  build-depends:      base
+                    , win-does
+
+  default-language:   Haskell2010
+
+  hs-source-dirs:     examples
+
+
+executable mouse-example
+  import:             warnings
+
+  main-is:            mouse-example.hs
+
+  build-depends:      base
+                    , win-does
+
+  default-language:   Haskell2010
+
+
+  hs-source-dirs:     examples
+
+
+library
+    import:           warnings
+
+    exposed-modules:
+        System
+      , System.Keyboard
+      , System.Mouse  
+
+    build-depends:    base
+                    , Win32
+
+    hs-source-dirs:   src
+
+    default-language: Haskell2010

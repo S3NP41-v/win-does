@@ -25,6 +25,11 @@ main = do
   delay
   release (KChar 'A')
 
+  -- listening
+  waitUntil ESC
+
+  putStrLn "Done!"
+
 
 
 delay :: IO ()

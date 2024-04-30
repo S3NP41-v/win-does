@@ -32,12 +32,16 @@ main = do
 
   -- scrolling
   delay
-  scroll 10
+  scroll 100
   delay
-  scroll (-10)
+  scroll (-100)
 
   -- dragging
-  dragMouse MiddleButton (500, 0) (500, 500)
+  dragMouse LeftButton (500, 0) (500, 500)
+
+  -- cursor position
+  pos <- getMousePos
+  putStrLn $ "mouse at " <> show pos
 
 
 delay :: IO ()

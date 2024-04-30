@@ -32,6 +32,7 @@ delay = threadDelay 500000
 - [x] Key press listening events
 - [ ] Setting hotkeys
 - [ ] Control over the speed of mouse cursor
+- [x] Get Mouse Position
 
 ### Contributing
 I don't have that much time on hands, but if you have a proposition, issue, or a question,

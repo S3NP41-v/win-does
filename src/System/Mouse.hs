@@ -1,4 +1,15 @@
-module System.Mouse ( initMouse, dragMouse, moveCursorTo, moveCursorBy, clickMouse, pressMouse, releaseMouse, scroll, MouseButton(..) ) where
+module System.Mouse
+  ( initMouse
+  , dragMouse
+  , moveCursorTo
+  , moveCursorBy
+  , clickMouse
+  , pressMouse
+  , releaseMouse
+  , scroll
+  , getMousePos
+  , MouseButton(..)
+  ) where
 
 
 import System.Win32.Automation.Input
@@ -6,8 +17,10 @@ import qualified System.Win32.Automation.Input.Mouse as M
 
 import System.Win32.Info.Computer ( getSystemMetrics )
 import System.Win32               ( sM_CXSCREEN, sM_CYSCREEN )
-import Control.Concurrent.MVar    ( putMVar, readMVar, MVar )
+import Graphics.Win32             ( getCursorPos )
+import Control.Concurrent.MVar    ( putMVar, readMVar, MVar, newEmptyMVar )
 import Control.Monad              ( void )
+import GHC.IO (unsafePerformIO)
 
 
 -- | Initialise the absolute coordinate functions (give them the screen dimensions)
@@ -35,11 +48,11 @@ moveCursorTo (x, y) = do
   (sX, sY) <- readMVar screenSizeMVar
 
   -- normalised vectors
-  let nX = floor (fromIntegral x / fromIntegral sX :: Float) * 65535
-  let nY = floor (fromIntegral y / fromIntegral sY :: Float) * 65535
+  let nX = floor ((fromIntegral x / fromIntegral sX :: Float) * 65535)
+  let nY = floor ((fromIntegral y / fromIntegral sY :: Float) * 65535)
 
   void $ sendInput [Mouse (M.MOUSEINPUT {M.dx = toEnum nX, M.dy = toEnum nY, M.mouseData = 0, M.dwFlags = 0x8001, M.time = 0, M.dwExtraInfo = 0})]
-  
+
 -- | Move cursor by relative amount from its current position
 moveCursorBy :: (Int, Int) -> IO ()
 moveCursorBy (x, y) = void $ sendInput [Mouse (M.MOUSEINPUT {M.dx = toEnum x, M.dy = toEnum y, M.mouseData = 0, M.dwFlags = 0x0001, M.time = 0, M.dwExtraInfo = 0})]
@@ -60,13 +73,18 @@ releaseMouse button = void $ sendInput [Mouse (M.MOUSEINPUT {M.dx = 0, M.dy = 0,
 
 -- | Scroll with the mouse wheel, positive means scroll up, negative scroll down
 scroll :: Int -> IO ()
-scroll by = void $ sendInput [Mouse (M.MOUSEINPUT {M.dx = 0, M.dy = 0, M.mouseData = toEnum by, M.dwFlags = 0x0800, M.time = 0, M.dwExtraInfo = 0})]
+scroll by = void $ sendInput [Mouse (M.MOUSEINPUT {M.dx = 0, M.dy = 0, M.mouseData = if by < 0 then -toEnum (abs by) else toEnum by, M.dwFlags = 0x0800, M.time = 0, M.dwExtraInfo = 0})]
+
+-- | Get current mouse position
+getMousePos :: IO (Int, Int)
+getMousePos = getCursorPos >>= \(x, y) -> return (fromEnum x, fromEnum y)
 
 
 -- internal
 
 screenSizeMVar :: MVar (Int, Int)
-screenSizeMVar = undefined
+{-# NOINLINE screenSizeMVar #-}
+screenSizeMVar = unsafePerformIO newEmptyMVar
 
 buttonDownToCode :: MouseButton -> Int
 buttonDownToCode LeftButton   = 0x0002

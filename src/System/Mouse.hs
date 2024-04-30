@@ -1,5 +1,6 @@
 module System.Mouse ( initMouse, dragMouse, moveCursorTo, moveCursorBy, clickMouse, pressMouse, releaseMouse, scroll, MouseButton(..) ) where
 
+
 import System.Win32.Automation.Input
 import qualified System.Win32.Automation.Input.Mouse as M
 

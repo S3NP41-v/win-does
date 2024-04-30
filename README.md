@@ -29,7 +29,7 @@ delay = threadDelay 500000
 ### Plans
 - [ ] Ability to insert special keys into a string to be typed out
 - [ ] Control over the speed at which keys are pressed in `typeString`
-- [ ] Key press listening events
+- [x] Key press listening events
 - [ ] Setting hotkeys
 - [ ] Control over the speed of mouse cursor
 

@@ -1,4 +1,4 @@
-module System.Keyboard ( typeString, click, press, release, getKeyState, waitUntil, Key(..) ) where
+module System.Keyboard ( typeString, click, press, release, getKeyState, waitUntil, Key(..), KeyState(..) ) where
 
 
 import System.Win32.Automation.Input ( sendInput, INPUT(Keyboard), KEYBDINPUT(KEYBDINPUT, dwExtraInfo, wVk, wScan, dwFlags, time) )
